@@ -1,13 +1,10 @@
+import {
+  DeleteNewsServerError,
+  NewsNotFoundToDeleteError,
+} from '../../../errors/news/delete';
 import { NewsRepository } from '../../repositories/news/news-repository';
 import { DeleteNewsDTO } from '../../validators';
 import { Service, ServiceResponse } from '../type';
-
-export class DeleteNewsError extends Error {
-  constructor() {
-    super('It was not possible to delete the news.');
-    this.name = 'DeleteNewsError';
-  }
-}
 
 export class DeleteNewsService implements Service<{ message: string }> {
   constructor(private readonly newsRepository: NewsRepository) {}
@@ -17,16 +14,23 @@ export class DeleteNewsService implements Service<{ message: string }> {
   ): Promise<ServiceResponse<{ message: string }>> {
     const news = await this.newsRepository.deleteOne(newsDeleteData);
 
-    if (news !== undefined) {
+    if (news) {
       return {
         isSuccess: true,
         data: { message: 'News deleted successfully' },
       };
-    } else {
+    }
+
+    if (news === null) {
       return {
         isSuccess: false,
-        error: new DeleteNewsError(),
+        error: new NewsNotFoundToDeleteError(),
       };
     }
+
+    return {
+      isSuccess: false,
+      error: new DeleteNewsServerError(),
+    };
   }
 }

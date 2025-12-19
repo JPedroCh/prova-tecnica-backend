@@ -66,14 +66,29 @@ class NewsTypeormRepository implements NewsRepository {
     };
   }
 
-  async updateOne(newsData: any): Promise<Noticia | undefined> {
-    const result = await this.newsRepository.save(newsData);
-    return result;
+  async updateOne(newsData: any): Promise<Noticia | undefined | null> {
+    const existing = await this.newsRepository.findOne({
+      where: { id: newsData.id },
+    });
+
+    if (!existing) {
+      return null;
+    }
+
+    const updated = await this.newsRepository.save({
+      ...existing,
+      ...newsData,
+    });
+
+    return updated;
   }
 
   async deleteOne(params: { id: number }): Promise<any> {
     const { id } = params;
     const result = await this.newsRepository.delete(id);
+    if (result.affected === 0) {
+      return null;
+    }
     return result;
   }
 }

@@ -23,6 +23,6 @@ export interface NewsRepository {
     id: number;
     title: string;
     description: string;
-  }): Promise<Noticia | undefined>;
+  }): Promise<Noticia | undefined | null>;
   deleteOne(params: { id: number }): Promise<Noticia | undefined>;
 }

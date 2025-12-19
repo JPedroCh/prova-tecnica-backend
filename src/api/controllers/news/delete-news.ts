@@ -1,13 +1,19 @@
 import { Controller } from '..';
 import { BadRequestError } from '../../../errors/bad-request';
 import {
+  DeleteNewsServerError,
+  NewsNotFoundToDeleteError,
+} from '../../../errors/news/delete';
+import { NotFoundError } from '../../../errors/not-found';
+import {
   badRequest,
   HttpResponse,
+  notFound,
   serverError,
   successfuRequest,
 } from '../../../shared/http';
 import NewsTypeormRepository from '../../repositories/news/news-typeorm-repository';
-import { DeleteNewsError, DeleteNewsService } from '../../services/news';
+import { DeleteNewsService } from '../../services/news';
 import { DeleteNewsDTO } from '../../validators';
 
 type Model =
@@ -28,8 +34,10 @@ export class DeleteNewsController extends Controller {
     if (response.isSuccess && response.data) {
       return successfuRequest(response.data);
     } else {
-      if (response.error instanceof DeleteNewsError) {
-        return badRequest(new BadRequestError(response.error.message));
+      if (response.error instanceof DeleteNewsServerError) {
+        return badRequest(new BadRequestError(response?.error.message));
+      } else if (response.error instanceof NewsNotFoundToDeleteError) {
+        return notFound(new NotFoundError(response?.error.message));
       } else return serverError(response.error);
     }
   }
