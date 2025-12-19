@@ -7,11 +7,8 @@ import {
   successfuRequest,
 } from '../../../shared/http';
 import NewsTypeormRepository from '../../repositories/news/news-typeorm-repository';
-import {
-  DeleteNewsData,
-  DeleteNewsError,
-  DeleteNewsService,
-} from '../../services/news';
+import { DeleteNewsError, DeleteNewsService } from '../../services/news';
+import { DeleteNewsDTO } from '../../validators';
 
 type Model =
   | Error
@@ -24,7 +21,7 @@ export class DeleteNewsController extends Controller {
     super();
   }
 
-  async perform(httpRequest: DeleteNewsData): Promise<HttpResponse<Model>> {
+  async perform(httpRequest: DeleteNewsDTO): Promise<HttpResponse<Model>> {
     const news = httpRequest;
     const response = await this.deleteNews.execute(news);
 

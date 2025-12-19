@@ -9,20 +9,6 @@ export class CreateNewsError extends Error {
   }
 }
 
-export class TitleNotProvidedError extends Error {
-  constructor() {
-    super('Title is a required field.');
-    this.name = 'TitleNotProvidedError';
-  }
-}
-
-export class DescriptionNotProvidedError extends Error {
-  constructor() {
-    super('Description is a required field.');
-    this.name = 'DescriptionNotProvidedError';
-  }
-}
-
 export class CreateNewsService implements Service<{
   title: string;
   description: string;
@@ -32,18 +18,6 @@ export class CreateNewsService implements Service<{
   async execute(
     createNewsData: CreateNewsDTO,
   ): Promise<ServiceResponse<{ title: string; description: string }>> {
-    if (!createNewsData.titulo) {
-      return {
-        isSuccess: false,
-        error: new TitleNotProvidedError(),
-      };
-    } else if (!createNewsData.descricao) {
-      return {
-        isSuccess: false,
-        error: new DescriptionNotProvidedError(),
-      };
-    }
-
     const news = await this.newsRepository.createNews({
       titulo: createNewsData.titulo,
       descricao: createNewsData.descricao,

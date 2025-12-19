@@ -7,11 +7,8 @@ import {
   successfuRequest,
 } from '../../../shared/http';
 import NewsTypeormRepository from '../../repositories/news/news-typeorm-repository';
-import {
-  UpdateNewsData,
-  UpdateNewsError,
-  UpdateNewsService,
-} from '../../services/news';
+import { UpdateNewsError, UpdateNewsService } from '../../services/news';
+import { UpdateNewsDTO } from '../../validators';
 type Model =
   | Error
   | {
@@ -23,7 +20,7 @@ export class UpdateNewsController extends Controller {
     super();
   }
 
-  async perform(httpRequest: UpdateNewsData): Promise<HttpResponse<Model>> {
+  async perform(httpRequest: UpdateNewsDTO): Promise<HttpResponse<Model>> {
     const news = httpRequest;
     const response = await this.updateNews.execute(news);
 
