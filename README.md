@@ -88,7 +88,7 @@ curl --request POST \
 
 Exemplo de resultado:
 
-![alt text](exemplo-criacao.png)
+![alt text](public/exemplo-criacao.png)
 
 
 ### Listar Notícias
@@ -115,7 +115,7 @@ curl --request GET \
 
 Exemplo de resultado:
 
-![alt text](exemplo-listagem.png)
+![alt text](public/exemplo-listagem.png)
 
 ### Editar/Atualizar Notícia
 
@@ -137,7 +137,7 @@ curl --request PUT \
 
 Exemplo de resultado:
 
-![alt text](exemplo-alteracao.png)
+![alt text](public/exemplo-alteracao.png)
 
 ### Deletar/Remover Notícia
 
@@ -157,7 +157,7 @@ curl --request DELETE \
 
 Exemplo de resultado:
 
-![alt text](exemplo-remocao.png)
+![alt text](public/exemplo-remocao.png)
 
 ## Testes
 
@@ -181,7 +181,7 @@ O comando irá criar uma imagem e subir contâiners para executar os testes, iss
 
 O resultado esperado é o seguinte:
 
-![alt text](teste-resultado.png)
+![alt text](public/teste-resultado.png)
 
 ## Contribuição
 
