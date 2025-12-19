@@ -7,8 +7,12 @@ import {
 } from '../controllers/news';
 import { adaptExpressRoute } from '../adapters/express-router';
 import { validate } from '../../shared/zod-middleware';
-import { createNewsSchema } from '../validators/create-news-validator';
-import { deleteNewsSchema, updateNewsSchema } from '../validators';
+import {
+  createNewsSchema,
+  deleteNewsSchema,
+  listNewsSchema,
+  updateNewsSchema,
+} from '../validators';
 
 const routes = Router();
 
@@ -17,7 +21,11 @@ routes.post(
   validate(createNewsSchema),
   adaptExpressRoute(makeCreateNewsController()),
 );
-routes.get('/list', adaptExpressRoute(makeListNewsController()));
+routes.get(
+  '/list',
+  validate(listNewsSchema),
+  adaptExpressRoute(makeListNewsController()),
+);
 routes.put(
   '/update',
   validate(updateNewsSchema),

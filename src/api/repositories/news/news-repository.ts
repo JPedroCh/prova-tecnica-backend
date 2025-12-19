@@ -5,7 +5,20 @@ export interface NewsRepository {
     titulo: string;
     descricao: string;
   }): Promise<Noticia | undefined>;
-  listAll(): Promise<Noticia | undefined>;
+  listAll(params: {
+    page?: number;
+    limit?: number;
+    titulo?: string;
+    descricao?: string;
+  }): Promise<{
+    data: Noticia[];
+    meta: {
+      total: number;
+      page: number;
+      limit: number;
+      totalPages: number;
+    };
+  }>;
   updateOne(params: {
     id: number;
     title: string;

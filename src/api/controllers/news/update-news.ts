@@ -20,9 +20,8 @@ export class UpdateNewsController extends Controller {
     super();
   }
 
-  async perform(httpRequest: UpdateNewsDTO): Promise<HttpResponse<Model>> {
-    const news = httpRequest;
-    const response = await this.updateNews.execute(news);
+  async perform(params: UpdateNewsDTO): Promise<HttpResponse<Model>> {
+    const response = await this.updateNews.execute(params);
 
     if (response.isSuccess && response.data) {
       return successfuRequest(response.data);
