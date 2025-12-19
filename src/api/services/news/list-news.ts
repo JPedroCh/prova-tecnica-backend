@@ -1,4 +1,5 @@
 import { NewsRepository } from '../../repositories/news/news-repository';
+import { ListNewsDTO } from '../../validators';
 import { Service, ServiceResponse } from '../type';
 
 export class ListNewsError extends Error {
@@ -15,10 +16,18 @@ export interface News {
 
 export class ListNewsService implements Service<News[]> {
   constructor(private readonly newsRepository: NewsRepository) {}
-  async execute(): Promise<ServiceResponse<News[]>> {
+  async execute(listNewsData: ListNewsDTO): Promise<ServiceResponse<News[]>> {
     let newsFound = null;
 
-    newsFound = await this.newsRepository.listAll();
+    newsFound = await this.newsRepository.listAll({
+      ...listNewsData,
+      page:
+        listNewsData.page !== undefined ? Number(listNewsData.page) : undefined,
+      limit:
+        listNewsData.limit !== undefined
+          ? Number(listNewsData.limit)
+          : undefined,
+    });
 
     if (newsFound) {
       const returnedValue = (

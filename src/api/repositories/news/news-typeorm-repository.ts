@@ -22,9 +22,48 @@ class NewsTypeormRepository implements NewsRepository {
     return news;
   }
 
-  async listAll(): Promise<any> {
-    const news = await this.newsRepository.find({});
-    return news;
+  async listAll({
+    page = 1,
+    limit = 10,
+    titulo,
+    descricao,
+  }: {
+    page?: number;
+    limit?: number;
+    titulo?: string;
+    descricao?: string;
+  }) {
+    const skip = (page - 1) * limit;
+
+    const query = this.newsRepository.createQueryBuilder('news');
+
+    if (titulo) {
+      query.andWhere('news.titulo ILIKE :titulo', {
+        titulo: `%${titulo}%`,
+      });
+    }
+
+    if (descricao) {
+      query.andWhere('news.descricao ILIKE :descricao', {
+        descricao: `%${descricao}%`,
+      });
+    }
+
+    const [data, total] = await query
+      .skip(skip)
+      .take(limit)
+      .orderBy('news.id', 'DESC')
+      .getManyAndCount();
+
+    return {
+      data,
+      meta: {
+        total,
+        page,
+        limit,
+        totalPages: Math.ceil(total / limit),
+      },
+    };
   }
 
   async updateOne(newsData: any): Promise<Noticia | undefined> {

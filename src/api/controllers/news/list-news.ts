@@ -8,6 +8,7 @@ import {
 } from '../../../shared/http';
 import NewsTypeormRepository from '../../repositories/news/news-typeorm-repository';
 import { ListNewsError, ListNewsService, News } from '../../services/news';
+import { ListNewsDTO } from '../../validators';
 
 type Model = Error | News[];
 
@@ -16,8 +17,8 @@ export class ListNewsController extends Controller {
     super();
   }
 
-  async perform(): Promise<HttpResponse<Model>> {
-    const response = await this.listNews.execute();
+  async perform(params: ListNewsDTO): Promise<HttpResponse<Model>> {
+    const response = await this.listNews.execute(params);
     if (response.isSuccess && response.data) {
       return successfuRequest(response.data);
     } else {

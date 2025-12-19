@@ -7,10 +7,7 @@ jest.setTimeout(15000);
 describe('Create Noticia (BDD)', () => {
   beforeAll(async () => {
     if (!dataSource.isInitialized) {
-      console.log('try to connect');
-      console.log(dataSource);
       await dataSource.initialize();
-      console.log('initiated');
     }
   });
 

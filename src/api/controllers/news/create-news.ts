@@ -8,11 +8,7 @@ import {
 } from '../../../shared/http';
 import NewsTypeormRepository from '../../repositories/news/news-typeorm-repository';
 import { CreateNewsService } from '../../services/news';
-
-type HttpRequest = {
-  titulo: string;
-  descricao: string;
-};
+import { CreateNewsDTO } from '../../validators';
 
 type Model =
   | Error
@@ -31,7 +27,7 @@ export class CreateNewsController extends Controller {
     super();
   }
 
-  async perform(params: HttpRequest): Promise<HttpResponse<Model>> {
+  async perform(params: CreateNewsDTO): Promise<HttpResponse<Model>> {
     const response = await this.createNews.execute(params);
     if (response.isSuccess && response.data)
       return successfuRequest(response.data);
