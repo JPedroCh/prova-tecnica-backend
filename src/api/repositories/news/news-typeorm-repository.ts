@@ -1,3 +1,4 @@
+import { newsCache } from '../../../infra/cache/news-cache';
 import { dataSource } from '../../../infra/database/config';
 import { Noticia } from './news-entity';
 import { NewsRepository } from './news-repository';
@@ -33,6 +34,10 @@ class NewsTypeormRepository implements NewsRepository {
     titulo?: string;
     descricao?: string;
   }) {
+    const cacheKey = JSON.stringify({ page, limit, titulo, descricao });
+    const cached = newsCache.get(cacheKey);
+    if (cached) return cached;
+
     const skip = (page - 1) * limit;
 
     const query = this.newsRepository.createQueryBuilder('news');
@@ -55,7 +60,7 @@ class NewsTypeormRepository implements NewsRepository {
       .orderBy('news.id', 'DESC')
       .getManyAndCount();
 
-    return {
+    const result = {
       data,
       meta: {
         total,
@@ -64,6 +69,10 @@ class NewsTypeormRepository implements NewsRepository {
         totalPages: Math.ceil(total / limit),
       },
     };
+
+    newsCache.set(cacheKey, result);
+
+    return result;
   }
 
   async updateOne(newsData: any): Promise<Noticia | undefined | null> {
