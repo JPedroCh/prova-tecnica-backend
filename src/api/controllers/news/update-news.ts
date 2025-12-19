@@ -1,13 +1,19 @@
 import { Controller } from '..';
 import { BadRequestError } from '../../../errors/bad-request';
 import {
+  NewsNotFoundToUpdateError,
+  UpdateNewsServerError,
+} from '../../../errors/news/update';
+import { NotFoundError } from '../../../errors/not-found';
+import {
   badRequest,
   HttpResponse,
+  notFound,
   serverError,
   successfuRequest,
 } from '../../../shared/http';
 import NewsTypeormRepository from '../../repositories/news/news-typeorm-repository';
-import { UpdateNewsError, UpdateNewsService } from '../../services/news';
+import { UpdateNewsService } from '../../services/news';
 import { UpdateNewsDTO } from '../../validators';
 type Model =
   | Error
@@ -27,8 +33,10 @@ export class UpdateNewsController extends Controller {
     if (response.isSuccess && response.data) {
       return successfuRequest(response.data);
     } else {
-      if (response.error instanceof UpdateNewsError) {
-        return badRequest(new BadRequestError(response.error.message));
+      if (response.error instanceof UpdateNewsServerError) {
+        return badRequest(new BadRequestError(response?.error.message));
+      } else if (response.error instanceof NewsNotFoundToUpdateError) {
+        return notFound(new NotFoundError(response?.error.message));
       } else return serverError(response.error);
     }
   }

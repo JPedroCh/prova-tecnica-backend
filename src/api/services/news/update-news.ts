@@ -1,13 +1,10 @@
+import {
+  NewsNotFoundToUpdateError,
+  UpdateNewsServerError,
+} from '../../../errors/news/update';
 import { NewsRepository } from '../../repositories/news/news-repository';
 import { UpdateNewsDTO } from '../../validators';
 import { Service, ServiceResponse } from '../type';
-
-export class UpdateNewsError extends Error {
-  constructor() {
-    super('It was not possible to update the news.');
-    this.name = 'UpdateNewsError';
-  }
-}
 
 export class UpdateNewsService implements Service<{ message: string }> {
   constructor(private readonly newsRepository: NewsRepository) {}
@@ -25,16 +22,23 @@ export class UpdateNewsService implements Service<{ message: string }> {
       ...toUpdateData,
     });
 
-    if (news !== undefined) {
+    if (news) {
       return {
         isSuccess: true,
         data: { message: 'News updated successfully' },
       };
-    } else {
+    }
+
+    if (news === null) {
       return {
         isSuccess: false,
-        error: new UpdateNewsError(),
+        error: new NewsNotFoundToUpdateError(),
       };
     }
+
+    return {
+      isSuccess: false,
+      error: new UpdateNewsServerError(),
+    };
   }
 }
